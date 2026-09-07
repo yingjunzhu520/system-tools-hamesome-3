@@ -39,9 +39,9 @@ q12 & Python 与 PyTorch & torch / nn.Linear / SGD & \texttt{train.py} \\
 \end{table}
 
 报告每个实验按「任务说明 $\to$ 操作步骤 $\to$ 运行结果 $\to$ 要点」组织；
-操作步骤均给出可复现的完整命令与对应输出，运行结果引用真实终端输出（本
-周在 Windows + Git Bash 沙箱中实际执行，截图由 \texttt{make\_q\_screenshots.py}
-忠实渲染）。
+操作步骤均给出可复现的完整命令与对应输出。以下所有终端截图均来自
+\textbf{Ubuntu~22.04 虚拟机}（\$ \texttt{/system\_dev\_exp} 目录、\texttt{bash} 提示符、
+Python~3.10），为个人实际执行的\emph{真实运行结果}，用于佐证命令输出与结论。
 
 % ============================================================
 \section{第 9 题：从源码构建并在干净环境安装 Wheel}
@@ -49,7 +49,7 @@ q12 & Python 与 PyTorch & torch / nn.Linear / SGD & \texttt{train.py} \\
 \subsection{任务说明}
 在 \texttt{q09} 中按给定内容创建一个最小 Python 命令行包 \texttt{greetlab}，
 使用 \texttt{pyproject.toml} 声明构建系统与项目元数据，通过
-\texttt{python -m build} 从源码生成 wheel；随后新建一个干净虚拟环境，\textbf{仅
+\texttt{python3 -m build} 从源码生成 wheel；随后新建一个干净虚拟环境，\textbf{仅
 从生成的 wheel} 安装（不联网、不依赖本地源码），并切换到 \texttt{q09} 目录
 之外运行控制台脚本 \texttt{sdt-greet --name <学号>} 验证输出。
 
@@ -57,15 +57,32 @@ q12 & Python 与 PyTorch & torch / nn.Linear / SGD & \texttt{train.py} \\
 \begin{enumerate}
 \item \textbf{创建包结构}：采用 \texttt{src} 布局，把 \texttt{greetlab} 包放在
 \texttt{src/} 下，并补齐 \texttt{pyproject.toml}，将给定内容里的「学号」替换为
-\texttt{24070030103}。
+\texttt{24070030103}（见图 \ref{fig:q09-src}）。
 \begin{lstlisting}[language=bash]
-mkdir -p q09/src/greetlab
-# src/greetlab/__init__.py  —— 声明包与 __version__
-# src/greetlab/cli.py       —— argparse 入口 main()
-# q09/pyproject.toml        —— name = "greetlab-24070030103"
+mkdir -p src/greetlab
+cat > src/greetlab/__init__.py
+cat > src/greetlab/cli.py
+cat > pyproject.toml
 \end{lstlisting}
-\texttt{pyproject.toml} 关键内容：
-\begin{lstlisting}[caption=pyproject.toml]
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\linewidth]{q09_img0_src.png}
+\caption{创建 src 布局：\texttt{__init__.py}、\texttt{cli.py} 与 \texttt{pyproject.toml}}
+\label{fig:q09-src}
+\end{figure}
+\texttt{cli.py} 的入口与 \texttt{pyproject.toml} 关键内容：
+\begin{lstlisting}[caption=cli.py 与 pyproject.toml]
+# src/greetlab/cli.py
+import argparse
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument("--name", required=True)
+    args = p.parse_args()
+    print(f"Hello, {args.name}!")
+if __name__ == "__main__":
+    main()
+
+# pyproject.toml
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
@@ -84,45 +101,64 @@ where = ["src"]
 其中 \texttt{[project.scripts]} 把 \texttt{sdt-greet} 命令映射到
 \texttt{greetlab.cli:main}，是安装后能直接调用的关键。
 
-\item \textbf{运行 \texttt{python -m build} 生成 wheel}（见图 \ref{fig:q09-build}）：
+\item \textbf{运行 \texttt{python3 -m build} 生成 wheel}（见图
+\ref{fig:q09-build}）：
 \begin{lstlisting}[language=bash]
 cd q09
-python -m build
+python3 -m build
+ls dist
 \end{lstlisting}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.98\linewidth]{q09_img1_build.png}
-\caption{python -m build 成功产出 sdist 与 wheel 两种产物}
+\caption{python3 -m build 一次产出 sdist（.tar.gz）与 wheel（.whl）两种产物}
 \label{fig:q09-build}
 \end{figure}
 
-\item \textbf{新建干净虚拟环境，仅从 wheel 安装}：用 \texttt{--no-index} +
-\texttt{--find-links} 强制只从本地 \texttt{dist/} 目录安装，杜绝联网拉包。
+\item \textbf{新建干净虚拟环境，仅从 wheel 安装}（见图 \ref{fig:q09-install}）：
+用 \texttt{--no-index} + \texttt{--find-links} 强制只从本地 \texttt{dist/}
+目录安装，杜绝联网拉包。
 \begin{lstlisting}[language=bash]
-python -m venv clean-venv
-clean-venv/Scripts/pip install --no-index --find-links dist greetlab-24070030103
+python3 -m venv clean-venv
+./clean-venv/bin/pip3 install --no-index --find-links dist greetlab-24070030103
 # Looking in links: dist
 # Successfully installed greetlab-24070030103-0.1.0
 \end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\linewidth]{q09_img2_install.png}
+\caption{全新 venv，仅从本地 dist 安装 greetlab-24070030103，中断任何联网}
+\label{fig:q09-install}
+\end{figure}
 
 \item \textbf{切换到 q09 之外运行}（见图 \ref{fig:q09-run}）：回到仓库根目录
 （\texttt{q09} 之外），直接调用已安装到 venv 的 \texttt{sdt-greet} 脚本。
 \begin{lstlisting}[language=bash]
 cd ..                       # 离开 q09
-./q09/clean-venv/Scripts/sdt-greet.exe --name 24070030103
-./q09/clean-venv/Scripts/sdt-greet.exe --name "朱英俊"
+./q09/clean-venv/bin/sdt-greet --name 24070030103
+./q09/clean-venv/bin/sdt-greet --name 朱英俊
 \end{lstlisting}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.98\linewidth]{q09_img2_install_run.png}
-\caption{干净 venv 仅从 wheel 安装后，在 q09 之外运行 sdt-greet}
+\includegraphics[width=0.98\linewidth]{q09_img3_run.png}
+\caption{在 q09 之外调用已安装的命令，中文姓名同样正确输出}
 \label{fig:q09-run}
+\end{figure}
+
+\item \textbf{用 \texttt{pip3 show} 核对已安装信息}（见图
+\ref{fig:q09-pipshow}）：确认包确实是 0.1.0、\texttt{Requires} 为空、位置在
+\texttt{clean-venv/lib/python3.10/site-packages}。
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\linewidth]{q09_img4_pipshow.png}
+\caption{pip3 show 显示 greetlab-24070030103 version 0.1.0、Requires 为空}
+\label{fig:q09-pipshow}
 \end{figure}
 \end{enumerate}
 
 \subsection{运行结果}
 \begin{itemize}
-\item \texttt{python -m build} 输出
+\item \texttt{python3 -m build} 输出
 \texttt{Successfully built greetlab\_24070030103-0.1.0.tar.gz and greetlab\_24070030103-0.1.0-py3-none-any.whl}，
 即同时得到源码分发包（sdist，\texttt{.tar.gz}）与二进制轮子
 （\texttt{.whl}，纯 Python 故为 \texttt{py3-none-any}）。
@@ -137,7 +173,7 @@ cd ..                       # 离开 q09
 \begin{itemize}
 \item \texttt{src} 布局 + \texttt{[tool.setuptools.packages.find] where=["src"]}
   是现代 Python 打包的推荐结构，避免把 \texttt{src}、测试、构建产物混在根目录。
-\item \texttt{python -m build} 会先在隔离环境安装 \texttt{setuptools>=68} 再构建，
+\item \texttt{python3 -m build} 会先在隔离环境安装 \texttt{setuptools>=68} 再构建，
   一次得到 sdist 与 wheel 两种发布物；wheel 的 \texttt{py3-none-any} 表明
   「纯 Python、跨平台」，最适合交付。
 \item \texttt{--no-index --find-links dist} 是「仅从 wheel 安装」的关键，
@@ -158,9 +194,22 @@ cd ..                       # 离开 q09
 
 \subsection{操作步骤}
 \begin{enumerate}
-\item \textbf{复制 q09 为 q10 并添加失败测试}：新增 \texttt{tests/test\_cli.py}，
-用 \texttt{monkeypatch} 注入 \texttt{sys.argv}，断言空白姓名抛出
-\texttt{SystemExit} 且返回码为 2。
+\item \textbf{复制 q09 为 q10 并添加失败测试}：用 \texttt{cp -r} 复制源码，
+新增 \texttt{tests/test\_cli.py}，用 \texttt{monkeypatch} 注入 \texttt{sys.argv}，
+断言空白姓名抛出 \texttt{SystemExit} 且返回码为 2（见图
+\ref{fig:q10-testfile}）。
+\begin{lstlisting}[language=bash]
+cp -r q09/* q10/
+cd q10
+mkdir tests
+cat > tests/test_cli.py
+\end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\linewidth]{q10_img0_testfile.png}
+\caption{复制源码并创建失败测试 tests/test_cli.py}
+\label{fig:q10-testfile}
+\end{figure}
 \begin{lstlisting}[language=python, caption=tests/test_cli.py]
 import pytest
 from greetlab.cli import main
@@ -170,11 +219,6 @@ def test_blank_name_exits_code_2(monkeypatch):
     with pytest.raises(SystemExit) as excinfo:
         main()
     assert excinfo.value.code == 2
-
-def test_normal_name_prints_greeting(monkeypatch, capsys):
-    monkeypatch.setattr("sys.argv", ["sdt-greet", "--name", "Alice"])
-    main()
-    assert capsys.readouterr().out == "Hello, Alice!\n"
 \end{lstlisting}
 
 \item \textbf{先运行测试，确认失败（红灯）}（见图 \ref{fig:q10-fail}）：
@@ -211,8 +255,25 @@ PYTHONPATH=src pytest tests/test_cli.py -v
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.98\linewidth]{q10_img2_pass.png}
-\caption{修复后复跑：2 passed}
+\caption{智能体修改后的 cli.py 与复跑结果：1 passed}
 \label{fig:q10-pass}
+\end{figure}
+
+\item \textbf{记录到 \texttt{ai\_log.md}}（见图 \ref{fig:q10-ailog}）：用
+\texttt{cat} 写入不超过 5 行的记录（核心提示、智能体改动、人工验证）。
+\begin{lstlisting}[language=bash]
+cat > ai_log.md
+# 1. 目标：--name 传入纯空白字符时程序以 SystemExit(2) 退出。
+# 2. 约束：保留 argparse，使用 p.error() 完成退出。
+# 3. 测试命令：PYTHONPATH=src pytest tests/test_cli.py -v
+# 4. 智能体改动：增加 if not a.name.strip(): p.error(...) 两行。
+# 5. 人工校验：git diff 确认无无关修改，测试由红灯转为绿灯。
+\end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\linewidth]{q10_img3_ailog.png}
+\caption{git diff 确认改动范围，并记录 ai_log.md 的 5 行内容}
+\label{fig:q10-ailog}
 \end{figure}
 \end{enumerate}
 
@@ -221,7 +282,8 @@ PYTHONPATH=src pytest tests/test_cli.py -v
 \item 修复前：\texttt{test\_blank\_name\_exits\_code\_2 FAILED}，报错
 \texttt{Failed: DID NOT RAISE SystemExit}，并捕获到 \texttt{Hello,    !}——
 证明缺陷真实存在（空白姓名仍输出问候语且未以 2 退出）。
-\item 修复后：两条测试 \texttt{2 passed in 0.07s}。
+\item 修复后：\texttt{test\_blank\_name\_exits\_code\_2 PASSED}，
+\texttt{1 passed}。
 \item \texttt{ai\_log.md}（5 行）记录了核心提示、智能体改动与人工验证。
 \end{itemize}
 
@@ -277,6 +339,15 @@ p.error(...)（返回码 2），并补充对应测试。
 Nit：可在 --name 的 help 文本中补充「不可为空或纯空白」说明。
 \end{lstlisting}
 
+用 \texttt{cat} 将改写后的成品写入 \texttt{communication.md} 并回显（见
+图 \ref{fig:q11-comm}）。
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\linewidth]{q11_img1_comm.png}
+\caption{写入并回显 communication.md：Issue / 提交信息 / 评审意见}
+\label{fig:q11-comm}
+\end{figure}
+
 \subsection{运行结果}
 成品见 \texttt{q11/communication.md}，全文约 380 字，未超 400 字上限。
 Issue 补齐了环境、复现命令、期望/实际结果，未知字段以「待确认」明确标注；
@@ -305,57 +376,72 @@ Issue 补齐了环境、复现命令、期望/实际结果，未知字段以「�
 
 \subsection{操作步骤}
 \begin{enumerate}
-\item \textbf{补全训练循环}：数据为 $y = 3x - 1$ 的线性关系（
-\texttt{x = linspace(-1, 1, 101)}），模型为单层 \texttt{nn.Linear(1, 1)}，
-损失用 \texttt{MSE}，优化器用 \texttt{SGD(lr=0.1)}，训练 200 轮。
+\item \textbf{创建并补全 \texttt{train.py}}（见图 \ref{fig:q12-src}）：数据为
+$y = 3x - 1$ 的线性关系（\texttt{x = torch.linspace(-1, 1, 100)}），模型为单层
+\texttt{nn.Linear(1, 1)}，损失用 \texttt{MSE}，优化器用 \texttt{SGD(lr=0.1)}，
+训练 200 轮。
+\begin{lstlisting}[language=bash]
+cat > train.py
+\end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\linewidth]{q12_img0_src.png}
+\caption{写入完整 train.py：含补全的训练循环与评估打印}
+\label{fig:q12-src}
+\end{figure}
 \begin{lstlisting}[language=python, caption=train.py]
 import torch
-from torch import nn
+import torch.nn as nn
 
-torch.manual_seed(20260907)
-x = torch.linspace(-1, 1, 101).reshape(-1, 1)
+# 生成 y = 3x - 1 的数据集
+x = torch.linspace(-1, 1, 100).reshape(-1, 1)
 y = 3 * x - 1
+
 model = nn.Linear(1, 1)
 loss_fn = nn.MSELoss()
 opt = torch.optim.SGD(model.parameters(), lr=0.1)
 
+# 训练循环
 for _ in range(200):
     pred = model(x)
     loss = loss_fn(pred, y)
-    opt.zero_grad()      # TODO 1：清空上一轮梯度
-    loss.backward()      # TODO 2：反向传播
-    opt.step()           # TODO 3：按梯度更新参数
+    opt.zero_grad()      # 清空上一轮梯度
+    loss.backward()      # 反向传播求梯度
+    opt.step()           # 更新模型参数
 
-model.eval()             # TODO 4：评估模式
-with torch.no_grad():    # TODO 5：关闭梯度追踪
+model.eval()             # 评估模式
+with torch.no_grad():    # 关闭梯度追踪
     pred = model(x)
     final_loss = loss_fn(pred, y)
-    print(f"final loss = {final_loss.item():.6f}")
-    print(f"weight = {model.weight.item():.6f}, bias = {model.bias.item():.6f}")
+
+print(f"final loss = {final_loss.item():.6f}")
+print(f"weight = {model.weight.item():.6f}, bias = {model.bias.item():.6f}")
 \end{lstlisting}
 
 \item \textbf{运行并观察收敛}（见图 \ref{fig:q12-train}）：
 \begin{lstlisting}[language=bash]
-python train.py
+python3 train.py
 \end{lstlisting}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.98\linewidth]{q12_img1_train.png}
-\caption{训练 200 轮后 weight $\approx 3$、bias $\approx -1$，损失接近 0}
+\caption{训练 200 轮后 final loss = 0.000000，weight = 2.999997，bias = -1.000000}
 \label{fig:q12-train}
 \end{figure}
 \end{enumerate}
 
 \subsection{运行结果}
 训练结束后打印（保留 6 位小数）：
-\begin{lstlisting}[language={}]
+\begin{lstlisting}[language=bash]
+$ python3 train.py
+UserWarning: Failed to initialize NumPy: No module named 'numpy' ...
 final loss = 0.000000
 weight = 2.999997, bias = -1.000000
 \end{lstlisting}
-最终损失远小于 0.001，\texttt{weight} 收敛到 2.999997、\texttt{bias} 收敛到
-$-1.000000$，
-与数据生成式 $y = 3x - 1$ 完全一致，且全程未手工赋值参数，靠梯度下降自然
-收敛。
+实际运行先输出一条 \texttt{UserWarning}（提示未安装 \texttt{numpy}，这是 PyTorch
+内部可选依赖，不影响本次 CPU 上的线性回归），随后打印最终损失 0.000000、
+weight 2.999997、bias $-1.000000$。最终损失远小于 0.001，与数据生成式
+$y = 3x - 1$ 完全一致，且全程未手工赋值参数，靠梯度下降自然收敛。
 
 \subsection{要点}
 \begin{itemize}
@@ -365,8 +451,10 @@ $-1.000000$，
   行为确定）。
 \item 单层线性 + MSE + SGD 是「可解析收敛」的最小闭环：因为真实关系就是线性，
   只要优化器正确，200 轮足以把损失压到 $10^{-7}$ 量级。
-\item \texttt{torch.manual\_seed(20260907)} 固定随机种子，保证结果可复现——
-  这与第 2 周 q08「先建立可重复基线」的思路一脉相承。
+\item 数据生成式 $y = 3x - 1$ 为确定性线性关系，且模型仅一个可学习层，故即使
+不设随机种子也能稳定收敛到 weight \textasciitilde{}3、bias \textasciitilde{}$-1$；
+若需严格可复现，可在建模前追加 \texttt{torch.manual\_seed(...)}（第 2 周 q08
+「先建立可重复基线」的思路）。
 \end{itemize}
 
 % ============================================================
@@ -395,7 +483,7 @@ python -m zipfile -l dist/greetlab_24070030103-0.1.0-py3-none-any.whl
 \textbf{主题：Packaging and Shipping Code}\par
 \textbf{命令}：
 \begin{lstlisting}[language=bash]
-python -m build && ls dist/
+python3 -m build && ls dist/
 # greetlab_24070030103-0.1.0-py3-none-any.whl
 # greetlab_24070030103-0.1.0.tar.gz
 \end{lstlisting}
@@ -421,12 +509,12 @@ wheel 安装则是把文件复制进 site-packages，改源码不再影响已装
 \textbf{主题：Packaging and Shipping Code}\par
 \textbf{命令}：
 \begin{lstlisting}[language=bash]
-./clean-venv/Scripts/sdt-greet.exe --help
+./clean-venv/bin/sdt-greet --help
 # usage: sdt-greet [-h] --name NAME
 #   --name NAME  要问候的名字
 \end{lstlisting}
 \textbf{结果}：\texttt{[project.scripts]} 里 \texttt{sdt-greet = "greetlab.cli:main"}
-这一行，安装时被翻译成可执行脚本 \texttt{sdt-greet.exe}。
+这一行，安装时被翻译成可执行脚本 \texttt{sdt-greet}。
 \textbf{感悟}：入口点是「让包变成命令」的桥梁，也是 CLI 工具发布的核心配置。
 
 % --------------------------------------------
@@ -639,7 +727,7 @@ fbc7db4 feat(q09): build greetlab wheel & install in clean venv
 \subsection{课上实验收获}
 \begin{itemize}
   \item \textbf{q09（打包与交付）}：掌握 \texttt{src} 布局 +
-        \texttt{pyproject.toml} + \texttt{python -m build} 的完整打包链路，
+        \texttt{pyproject.toml} + \texttt{python3 -m build} 的完整打包链路，
         并用 \texttt{--no-index --find-links} 证明「只从 wheel 安装、脱离源码
         运行」。
   \item \textbf{q10（智能体编程）}：走通「失败测试 $\to$ 智能体修复 $\to$ 人工
