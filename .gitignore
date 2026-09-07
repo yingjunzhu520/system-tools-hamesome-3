@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+.clean-venv/
+venv/
+q09/clean-venv/
+q09/build/
+q09/*.egg-info/
+q09/src/*.egg-info/
+*.egg-info/
+dist/
+build/
+.vscode/
