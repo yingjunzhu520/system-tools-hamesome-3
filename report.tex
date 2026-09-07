@@ -680,11 +680,18 @@ commit 记录，且\textbf{禁止单次全量提交}；并把仓库链接与 com
 
 \subsection{提交记录（分次提交，非全量）}
 本地仓库按「初始化模板 $\to$ q09 $\to$ q10 $\to$ q11 $\to$ q12 $\to$ 截图脚本
-$\to$ 报告撰写 $\to$ README $\to$ PDF 预览 $\to$ 提交记录截图」的顺序分次提交，
-每步都是增量修改（无单次全量提交）。\texttt{git log --oneline} 实际输出如下
-（由新到旧）：
+$\to$ 报告撰写 $\to$ README $\to$ PDF 预览 $\to$ 提交记录截图
+$\to$ 替换/新增真实截图 $\to$ 重写报告嵌入真实截图 $\to$ 更新 PDF 预览」
+的顺序分次提交，每步都是增量修改（无单次全量提交）。\texttt{git log --oneline}
+实际输出如下（由新到旧）：
 
 \begin{lstlisting}[language=bash]
+f4c6be6 chore(preview): embed real screenshots in fpdf2 PDF preview (report_with_images.pdf, 10 pages)
+b376ee1 docs(report): embed 12 real screenshots and align narrative with Linux VM (Ubuntu 22.04 / Python 3.10 / clean-venv/bin)
+1f4b1dc feat: add 8 real terminal screenshots for q09-q12 (src/install/run/pipshow/testfile/ailog/comm/q12-src)
+2d9076d chore: replace 4 script-rendered screenshots with real terminal captures (q09 build / q10 fail / q10 pass / q12 train)
+c8ae8f3 docs: add figure cross-references in report body
+d4b7c91 docs: finalize commit history record in report
 b3117c7 fix(report): use default style for toml/markdown code blocks
 a8e8391 chore: refresh commit screenshot to final history
 d39f6e1 docs: sync commit log and embed commit screenshot
