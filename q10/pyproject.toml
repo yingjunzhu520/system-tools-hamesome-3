@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "greetlab-24070030103"
+version = "0.1.0"
+description = "最小命令行问候包（第 9 题：Packaging and Shipping Code）"
+requires-python = ">=3.9"
+
+[project.scripts]
+sdt-greet = "greetlab.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
