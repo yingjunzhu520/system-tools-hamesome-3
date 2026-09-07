@@ -84,7 +84,7 @@ where = ["src"]
 其中 \texttt{[project.scripts]} 把 \texttt{sdt-greet} 命令映射到
 \texttt{greetlab.cli:main}，是安装后能直接调用的关键。
 
-\item \textbf{运行 \texttt{python -m build} 生成 wheel}：
+\item \textbf{运行 \texttt{python -m build} 生成 wheel}（见图 \ref{fig:q09-build}）：
 \begin{lstlisting}[language=bash]
 cd q09
 python -m build
@@ -105,8 +105,8 @@ clean-venv/Scripts/pip install --no-index --find-links dist greetlab-24070030103
 # Successfully installed greetlab-24070030103-0.1.0
 \end{lstlisting}
 
-\item \textbf{切换到 q09 之外运行}：回到仓库根目录（\texttt{q09} 之外），直接
-调用已安装到 venv 的 \texttt{sdt-greet} 脚本。
+\item \textbf{切换到 q09 之外运行}（见图 \ref{fig:q09-run}）：回到仓库根目录
+（\texttt{q09} 之外），直接调用已安装到 venv 的 \texttt{sdt-greet} 脚本。
 \begin{lstlisting}[language=bash]
 cd ..                       # 离开 q09
 ./q09/clean-venv/Scripts/sdt-greet.exe --name 24070030103
@@ -177,7 +177,7 @@ def test_normal_name_prints_greeting(monkeypatch, capsys):
     assert capsys.readouterr().out == "Hello, Alice!\n"
 \end{lstlisting}
 
-\item \textbf{先运行测试，确认失败（红灯）}：
+\item \textbf{先运行测试，确认失败（红灯）}（见图 \ref{fig:q10-fail}）：
 \begin{lstlisting}[language=bash]
 PYTHONPATH=src pytest tests/test_cli.py -v
 \end{lstlisting}
@@ -202,8 +202,8 @@ if not a.name.strip():
 print(f"Hello, {a.name}!")
 \end{lstlisting}
 
-\item \textbf{人工检查 diff 并复跑（绿灯）}：用 \texttt{git diff} 确认智能体
-仅新增两行、无无关改动，再复跑测试。
+\item \textbf{人工检查 diff 并复跑（绿灯）}（见图 \ref{fig:q10-pass}）：用
+\texttt{git diff} 确认智能体仅新增两行、无无关改动，再复跑测试。
 \begin{lstlisting}[language=bash]
 git diff -- src/greetlab/cli.py   # 仅 +2 行，无其他改动
 PYTHONPATH=src pytest tests/test_cli.py -v
@@ -334,7 +334,7 @@ with torch.no_grad():    # TODO 5：关闭梯度追踪
     print(f"weight = {model.weight.item():.6f}, bias = {model.bias.item():.6f}")
 \end{lstlisting}
 
-\item \textbf{运行并观察收敛}：
+\item \textbf{运行并观察收敛}（见图 \ref{fig:q12-train}）：
 \begin{lstlisting}[language=bash]
 python train.py
 \end{lstlisting}
@@ -612,7 +612,8 @@ fbc7db4 feat(q09): build greetlab wheel & install in clean venv
 \end{lstlisting}
 
 可以看到：初始化、四道实验题、截图脚本、报告、README 分别独立成 commit，
-各题一一对应且互不合并，满足「禁止单次全量提交」的要求。
+各题一一对应且互不合并，满足「禁止单次全量提交」的要求。仓库页面与提交记录
+截图见图 \ref{fig:commit}。
 
 \begin{figure}[H]
 \centering
