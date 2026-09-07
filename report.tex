@@ -592,10 +592,24 @@ commit 记录，且\textbf{禁止单次全量提交}；并把仓库链接与 com
 
 \subsection{提交记录（分次提交，非全量）}
 本地仓库按「初始化模板 $\to$ q09 $\to$ q10 $\to$ q11 $\to$ q12 $\to$ 截图脚本
-$\to$ 报告撰写 $\to$ README $\to$ 提交记录截图」的顺序分次提交，每步都是增量
-修改（无单次全量提交）。\texttt{git log --oneline} 实际输出见下文（由新到旧）。
+$\to$ 报告撰写 $\to$ README $\to$ PDF 预览 $\to$ 提交记录截图」的顺序分次提交，
+每步都是增量修改（无单次全量提交）。\texttt{git log --oneline} 实际输出如下
+（由新到旧）：
 
-% COMMIT_LOG_PLACEHOLDER
+\begin{lstlisting}[language=bash]
+4f6fa9d chore: add fpdf2 pdf preview and screenshot scripts
+1a4b187 docs: add README with structure
+65cc8ca docs: add week3 LaTeX report (q09-q12 + 14 exercises)
+d432619 chore: add terminal screenshot render script
+f66fc56 feat(q12): pytorch linear regression training loop
+fd78851 feat(q11): rewrite collaboration materials
+6bceb5d feat(q10): agentic TDD fix for blank-name validation
+fbc7db4 feat(q09): build greetlab wheel & install in clean venv
+269c511 chore: init repo + add hamesome-report.cls template
+\end{lstlisting}
+
+可以看到：初始化、四道实验题、截图脚本、报告、README 分别独立成 commit，
+各题一一对应且互不合并，满足「禁止单次全量提交」的要求。
 
 \begin{figure}[H]
 \centering
