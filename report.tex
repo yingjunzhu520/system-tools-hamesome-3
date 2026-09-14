@@ -677,6 +677,15 @@ commit 记录，且\textbf{禁止单次全量提交}；并把仓库链接与 com
 \begin{itemize}
   \item GitHub：\url{https://github.com/yingjunzhu520/system-tools-hamesome-3}
 \end{itemize}
+仓库主页见图 \ref{fig:github-page}：页面顶部为 \texttt{main} 分支、分支/标签数量、
+提交总数（\textbf{20 次提交}）与最新一次提交记录；下方为完整文件清单，每个文件
+右侧标注最近一次改动它的 commit 信息，可直观验证「分次提交」确实按题号落地。
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\linewidth]{github_repo_page.png}
+\caption{GitHub 仓库主页 yingjunzhu520/system-tools-hamesome-3（main 分支、20 次提交、文件清单）}
+\label{fig:github-page}
+\end{figure}
 
 \subsection{提交记录（分次提交，非全量）}
 本地仓库按「初始化模板 $\to$ q09 $\to$ q10 $\to$ q11 $\to$ q12 $\to$ 截图脚本
@@ -707,8 +716,8 @@ fbc7db4 feat(q09): build greetlab wheel & install in clean venv
 \end{lstlisting}
 
 可以看到：初始化、四道实验题、截图脚本、报告、README 分别独立成 commit，
-各题一一对应且互不合并，满足「禁止单次全量提交」的要求。仓库页面与提交记录
-截图见图 \ref{fig:commit}。
+各题一一对应且互不合并，满足「禁止单次全量提交」的要求。仓库主页外观见
+图 \ref{fig:github-page}，提交历史的整理视图见图 \ref{fig:commit}。
 
 \begin{figure}[H]
 \centering
