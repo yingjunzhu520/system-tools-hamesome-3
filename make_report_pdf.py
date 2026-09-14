@@ -325,6 +325,8 @@ body("14 个练习把四章内容织成一张网：Packaging 打通「源码 -> 
 section("7", "版本控制与提交记录")
 sub("仓库地址")
 body("GitHub：https://github.com/yingjunzhu520/system-tools-hamesome-3")
+img("github_repo_page.png",
+    "GitHub 仓库主页（main 分支、20 次提交、文件清单）", 0.98)
 sub("提交记录（分次提交，非全量）")
 body("本地仓库按「初始化模板 -> q09 -> q10 -> q11 -> q12 -> 截图脚本 -> 报告 -> "
      "README -> 提交记录截图」的顺序分次提交，每步均为增量修改。详见报告正文的 "
