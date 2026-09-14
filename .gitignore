@@ -13,3 +13,6 @@ q09/src/*.egg-info/
 dist/
 build/
 .vscode/
+
+# 本地推送助手（含令牌读取逻辑，不入库）
+api_push.py

@@ -693,9 +693,10 @@ $\to$ 报告撰写 $\to$ README $\to$ PDF 预览 $\to$ 提交记录截图
 $\to$ 替换/新增真实截图 $\to$ 重写报告嵌入真实截图 $\to$ 更新 PDF 预览
 $\to$ 写入 GitHub 仓库主页截图 $\to$ 同步提交记录」
 的顺序分次提交，每步都是增量修改（无单次全量提交）。\texttt{git log --oneline}
-实际输出如下（由新到旧，共 24 条；最后一次同步提交本身未列入）：
+实际输出如下（由新到旧）：
 
 \begin{lstlisting}[language=bash]
+d50fffc chore: refresh commit screenshot to latest history
 d98a91a docs(report): sync git log listing to latest history
 c059c24 chore(preview): render GitHub page screenshot in fpdf2 PDF preview
 8d4b1a2 docs(report): embed GitHub repo page screenshot in version-control section
