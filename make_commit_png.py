@@ -149,10 +149,10 @@ def render(rows):
     d.text((50, y + 6), BRANCH, font=f_mono, fill=DARK)
     d.text((132, y + 6), "%d Commits" % len(rows), font=f_body, fill=GREY)
 
-    # 表头
+    # 表头（左列为提交信息，右列为作者）
     hy = y + 52
-    d.text((28, hy), "Latest commit", font=f_sub, fill=GREY)
-    d.text((W - 330, hy), "Commit message", font=f_sub, fill=GREY)
+    d.text((28, hy), "Commit message", font=f_sub, fill=GREY)
+    d.text((W - 330, hy), "Author", font=f_sub, fill=GREY)
     d.line((28, hy + 26, W - 28, hy + 26), fill=LINE, width=1)
 
     # 提交行
@@ -163,8 +163,13 @@ def render(rows):
         initial = (author[:1] or "?").upper()
         iw = d.textbbox((0, 0), initial, font=f_body)[2]
         d.text((43 - iw / 2, ry + 17), initial, font=f_body, fill=(255, 255, 255))
-        # message（截断）
-        shown = msg if len(msg) <= 62 else msg[:59] + "..."
+        # message（按可用宽度自适应截断，避免压到右侧作者列）
+        avail = (W - 330) - 72 - 24
+        shown = msg
+        if d.textlength(shown, font=f_mono) > avail:
+            while shown and d.textlength(shown + "...", font=f_mono) > avail:
+                shown = shown[:-1]
+            shown += "..."
         d.text((72, ry + 6), shown, font=f_mono, fill=DARK)
         # sha + 相对时间
         d.text((72, ry + 26), sha, font=f_mono, fill=GREY)
