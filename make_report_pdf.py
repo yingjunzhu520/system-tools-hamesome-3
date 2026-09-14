@@ -166,7 +166,7 @@ body("在 q09 中创建最小 Python 命令行包 greetlab，用 python3 -m buil
 sub("操作步骤")
 body("1) 创建 src 布局：mkdir -p src/greetlab，并写入 __init__.py、cli.py 与 "
      "pyproject.toml，把「学号」替换为 24070030103。")
-img("q09_img0_src.png", "q09：创建 src 布局（__init__.py / cli.py / pyproject.toml）")
+img("q09_img0_src.png", "q09：创建 src 布局（__init__.py / cli.py / pyproject.toml）", 0.72)
 code("[build-system]\nrequires = [\"setuptools>=68\"]\nbuild-backend = \"setuptools.build_meta\"\n\n"
      "[project]\nname = \"greetlab-24070030103\"\nversion = \"0.1.0\"\nrequires-python = \">=3.9\"\n\n"
      "[project.scripts]\nsdt-greet = \"greetlab.cli:main\"\n\n"
@@ -261,7 +261,7 @@ body("补全 train.py 的训练循环 TODO：正确调用 zero_grad / backward /
 sub("操作步骤")
 body("数据 y = 3x - 1（linspace(-1, 1, 100)），模型 nn.Linear(1,1)，损失 MSE，"
      "优化器 SGD(lr=0.1)，训练 200 轮。完整 train.py 如下：")
-img("q12_img0_src.png", "q12：cat 写入完整 train.py（补全训练循环 + 评估打印）")
+img("q12_img0_src.png", "q12：cat 写入完整 train.py（补全训练循环 + 评估打印）", 0.72)
 code("import torch\nimport torch.nn as nn\n"
      "x = torch.linspace(-1, 1, 100).reshape(-1, 1)\n"
      "y = 3 * x - 1\n"
