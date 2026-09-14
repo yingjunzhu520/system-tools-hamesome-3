@@ -329,8 +329,9 @@ img("github_repo_page.png",
     "GitHub 仓库主页（main 分支、20 次提交、文件清单）", 0.98)
 sub("提交记录（分次提交，非全量）")
 body("本地仓库按「初始化模板 -> q09 -> q10 -> q11 -> q12 -> 截图脚本 -> 报告 -> "
-     "README -> 提交记录截图」的顺序分次提交，每步均为增量修改。详见报告正文的 "
-     "git log --oneline 输出与 commit_screenshot.png。")
+     "README -> 提交记录截图 -> 真实截图替换/新增 -> 仓库主页截图」的顺序分次提交，"
+     "每步均为增量修改（无单次全量提交）。详见报告正文的 git log --oneline 输出与 "
+     "commit_screenshot.png。")
 
 # ============ 8 小结 ============
 section("8", "小结")
